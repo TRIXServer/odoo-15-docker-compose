@@ -42,6 +42,7 @@ fi
 # Set file and directory permissions after installation
 find $DESTINATION -type f -exec chmod 644 {} \;
 find $DESTINATION -type d -exec chmod 755 {} \;
+sudo chmod +x $DESTINATION/entrypoint.sh
 
 # Run Odoo
 docker-compose -f $DESTINATION/docker-compose.yml up -d
