@@ -20,7 +20,7 @@ services:
       - "18069:8069"
       - "18072:8072" # live chat
     tty: true
-    command: "--"
+    command: --
     environment:
       - HOST=db
       - USER=odoo
