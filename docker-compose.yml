@@ -17,10 +17,10 @@ services:
     depends_on:
       - db
     ports:
-      - "10015:8069"
-      - "20015:8072" # live chat
+      - "18069:8069"
+      - "18072:8072" # live chat
     tty: true
-    command: --
+    command: "--"
     environment:
       - HOST=db
       - USER=odoo
@@ -32,4 +32,5 @@ services:
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo
     restart: always             # run as a service
+
     

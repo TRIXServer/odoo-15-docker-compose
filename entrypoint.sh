@@ -15,21 +15,6 @@ pip3 install -r /etc/odoo/requirements.txt
 
 # sed -i 's|raise werkzeug.exceptions.BadRequest(msg)|self.jsonrequest = {}|g' /usr/lib/python3/dist-packages/odoo/http.py
 
-DB_ARGS=()
-function check_config() {
-    param="$1"
-    value="$2"
-    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then       
-        value=$(grep -E "^\s*\b${param}\b\s*=" "$ODOO_RC" |cut -d " " -f3|sed 's/["\n\r]//g')
-    fi;
-    DB_ARGS+=("--${param}")
-    DB_ARGS+=("${value}")
-}
-check_config "db_host" "$HOST"
-check_config "db_port" "$PORT"
-check_config "db_user" "$USER"
-check_config "db_password" "$PASSWORD"
-
 apt-get update && \
     apt-get install -y --no-install-recommends \
         git \
@@ -121,11 +106,25 @@ fi
 # Instalar dependencias
 REQUIREMENTS_FILES=$(find /mnt/extra-addons/ -name "requirements.txt")
 if [ -n "$REQUIREMENTS_FILES" ]; then
-  pip3 install pip --upgrade
   for FILE in $REQUIREMENTS_FILES; do
     pip3 install -r "$FILE" || echo "Error instalando desde $FILE"
   done
 fi
+
+DB_ARGS=()
+function check_config() {
+    param="$1"
+    value="$2"
+    if grep -q -E "^\s*\b${param}\b\s*=" "$ODOO_RC" ; then       
+        value=$(grep -E "^\s*\b${param}\b\s*=" "$ODOO_RC" |cut -d " " -f3|sed 's/["\n\r]//g')
+    fi;
+    DB_ARGS+=("--${param}")
+    DB_ARGS+=("${value}")
+}
+check_config "db_host" "$HOST"
+check_config "db_port" "$PORT"
+check_config "db_user" "$USER"
+check_config "db_password" "$PASSWORD"
 
 case "$1" in
     -- | odoo)
